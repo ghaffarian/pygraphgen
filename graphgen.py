@@ -157,15 +157,11 @@ def validate_params():
     if AVRG_FRQNT_SIZE >= AVRG_GRAPH_SIZE:
         error = True
         print('ERROR: Average size of frequent patterns must be less than average size of graphs!')
-    if DATASET_LEN < MIN_SUPPORT * DATASET_LEN * FREQUENTS_LEN:
+    if FREQUENTS_LEN * AVRG_FRQNT_SIZE * 2 > comb(VERTEX_LABELS_LEN, 2) * EDGE_LABELS_LEN:
         error = True
-        print('ERROR: Inconsistent values for: MIN-SUPPORT, DATASET-COUNT, FREQUENTS-COUNT!\n'
-              '       DATASET_COUNT must be greater than: MIN-SUPPORT x DATASET-COUNT x FREQUENTS-COUNT')
-    if FREQUENTS_LEN > 2 ** (VERTEX_LABELS_LEN * EDGE_LABELS_LEN):
-        error = True
-        print('ERROR: Total number of distinct frequent patterns cannot be larger than: ' +
-              str(2 ** (VERTEX_LABELS_LEN * EDGE_LABELS_LEN)) +
-              '\n       with the given number of distinct vertex and edge labels.')
+        print('ERROR: Total number of distinct frequent patterns cannot be larger than: %d'
+              % comb(VERTEX_LABELS_LEN, 2) * EDGE_LABELS_LEN / 2 / AVRG_FRQNT_SIZE, '\n'
+              '       with the given number of distinct vertex and edge labels.')
     if error:
         sys.exit(1)
 
@@ -295,8 +291,12 @@ if os.path.exists(OUTPUT_DIR) and os.path.isdir(OUTPUT_DIR) and len(os.listdir(O
         sys.exit(0)
     else:
         for path in os.listdir(OUTPUT_DIR):
-            if os.path.isfile(path):
-                os.remove(path)
+            if os.path.isfile(OUTPUT_DIR + path):
+                os.remove(OUTPUT_DIR + path)
+        frq_dir = 'frequent-patterns/'
+        for path in os.listdir(OUTPUT_DIR + frq_dir):
+            if os.path.isfile(OUTPUT_DIR + frq_dir + path):
+                os.remove(OUTPUT_DIR + frq_dir + path)
         print(' ')
 
 # create edge labels
@@ -424,7 +424,7 @@ os.makedirs(OUTPUT_DIR + 'frequent-patterns/', exist_ok=True)
 print('Writing patterns to output files ...')
 counter = 1
 for graph in frq_subgraphs:
-    counter_str = ('{:0' + str(len(str(FREQUENTS_LEN))) + 'd}').format(counter)
+    counter_str = ('%0' + str(len(str(FREQUENTS_LEN))) + 'd') % counter
     filename = 'pattern_' + counter_str + '.dot'
     write_dot(graph, OUTPUT_DIR + 'frequent-patterns/' + filename)
     counter += 1
@@ -433,7 +433,7 @@ for graph in frq_subgraphs:
 print('Writing graph-dataset to output files ...')
 counter = 1
 for graph in dataset:
-    counter_str = ('{:0' + str(len(str(DATASET_LEN))) + 'd}').format(counter)
+    counter_str = ('%0' + str(len(str(DATASET_LEN))) + 'd') % counter
     filename = 'graph_' + counter_str + '.dot'
     write_dot(graph, OUTPUT_DIR + filename)
     counter += 1
