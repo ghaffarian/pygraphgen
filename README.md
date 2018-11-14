@@ -42,6 +42,7 @@ OPTIONS:
 
 ```
 
+
 ## Examples
 
 The generated dataset in the following examples is written in the `graph-dataset` directory. In this directory, there will be another directory named `frequent-patterns` and several files with `.dot` extension. The `dot` files are the individual graphs of the dataset. The `frequent-patterns` directory also includes some `dot` files which are the generated frequent patterns inserted in various graphs of the dataset.
