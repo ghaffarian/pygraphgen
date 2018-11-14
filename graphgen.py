@@ -169,7 +169,7 @@ def validate_params():
 def print_program_params():
     """Print program parameters."""
     print('OUTPUT_DIR ...... =', OUTPUT_DIR)
-    print('MIN_SUPPORT ..... =', '{:.2f}'.format(MIN_SUPPORT))
+    print('MIN_SUPPORT ..... =', '%.2f' % MIN_SUPPORT)
     print('DATASET_LEN ..... =', DATASET_LEN)
     print('FREQUENTS_LEN ... =', FREQUENTS_LEN)
     print('EDGE_LABELS_LEN . =', EDGE_LABELS_LEN)
@@ -253,9 +253,9 @@ def write_dot(graph, filepath):
     graph_name = filepath[filepath.rfind('/') + 1: filepath.rfind('.')]
     with open(filepath, "w") as file:
         if IS_DIRECTED:
-            file.write("digraph %s {\n" % graph_name)
+            file.write('digraph %s {\n' % graph_name)
         else:
-            file.write("graph %s {\n" % graph_name)
+            file.write('graph %s {\n' % graph_name)
         # write vertices
         file.write('  // graph-vertices\n')
         v_list = list(graph.keys())
@@ -303,14 +303,14 @@ if os.path.exists(OUTPUT_DIR) and os.path.isdir(OUTPUT_DIR) and len(os.listdir(O
 edge_labels = list()
 if EDGE_LABELS_LEN > 1:
     for ei in range(EDGE_LABELS_LEN):
-        edge_labels.append('E' + ('{:0' + str(len(str(VERTEX_LABELS_LEN))) + 'd}').format(ei + 1))
+        edge_labels.append('E' + ('%0' + str(len(str(VERTEX_LABELS_LEN))) + 'd') % (ei + 1))
 else:
     edge_labels = [' ']
 
 # create vertex labels
 vertex_labels = list()
 for vi in range(VERTEX_LABELS_LEN):
-    vertex_labels.append('V' + ('{:0' + str(len(str(VERTEX_LABELS_LEN))) + 'd}').format(vi + 1))
+    vertex_labels.append('V' + ('%0' + str(len(str(VERTEX_LABELS_LEN))) + 'd') % (vi + 1))
 
 # generate frequent subgraphs
 mu = AVRG_FRQNT_SIZE
